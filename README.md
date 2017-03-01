@@ -1,4 +1,4 @@
-# Brain box prototype v0.00001b
+# Brain box v0.00001b
 
 Brain box proof of concept. Hardware features a raspberry pi with 7" multipoint touch screen, high resolution camera, sensors for air temperature, humidity, co2, o2, water temperature, ph, and ec - all packed into a rugged encolsure. 
 
