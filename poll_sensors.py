@@ -10,7 +10,7 @@ import time
 from am2315 import am2315
 from w1thermsensor import W1ThermSensor
 import NDIR
-
+import serial
 
 class AtlasDevice(Device):
 	def __init__(self, sn):
@@ -159,17 +159,32 @@ def mhz16Update(sensor):
     co2_str = "{0:.0f}".format(co2)
     shared.set('co2', co2_str)
 
+def groveO2Init():
+    port = serial.Serial("/dev/serial/by-id/usb-Numato_Systems_Pvt._Ltd._Numato_Lab_8_Channel_USB_GPIO_Module-if00", 19200, timeout=1)
+    return port
+
+def groveO2Update(port):
+    port.write("adc read 0\r".encode())
+    response = port.read(25)
+    voltage = float(response[10:-3]) * 5 / 1024
+    o2 = voltage * 0.21 / 2.0 * 100 # percent
+    o2_str = "{0:.1f}".format(o2)
+    shared.set('o2', o2_str)
+    #print(o2)
+
 if __name__ == '__main__':
     atlas_ph = atlasPhInit('DO009P10')
     atlas_ec = atlasEcInit('DJ00RV6G')
     am2315 = am2315Init()
     ds18b20 = ds18b20Init()
     mhz16 = mhz16Init()    
+    grove_o2 = groveO2Init()
 
     while 1:
         atlasPhUpdate(atlas_ph)
         atlasEcUpdate(atlas_ec)
         am2315Update(am2315)
         ds18b20Update(ds18b20)
-        mhz16Update(mhz16)    
+        mhz16Update(mhz16)  
+        groveO2Update(grove_o2)  
         time.sleep(1)
