@@ -15,7 +15,16 @@ Brain box proof of concept. Hardware features a raspberry pi with 7" multipoint 
 ![box] (photos/box.jpeg)
 
 # Software Installation
-Flash Raspbian Jessie to device
+Follow this tutorial to get Raspbian Jessie to boot from the external SSD: http://www.berryterminal.com/doku.php/berryboot
+
+## Setup desktop interface
+1. Edit raspi settings
+```
+sudo raspi-config
+```
+2. Select 7. Advanced Options
+3. Enable SSH
+4. Enable I2C
 
 Clone repo
 ```
