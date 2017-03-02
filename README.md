@@ -31,6 +31,19 @@ Add to end of file
 ```
 dtoverlay=w1-gpio
 ```
+Restart the pi
+```
+sudo reboot
+```
+Verify sensor can be seen (Note: need to have a sensor conntected)
+```
+w1thermsensor ls
+```
+Should see something that looks like:
+```
+HWID: 0000068b7f41 Type: DS18B20
+```
+
 Source: http://raspberrypi.stackexchange.com/questions/26623/ds18b20-not-listed-in-sys-bus-w1-devices
 
 ## Fixes for Atlas Scientific sensors
