@@ -4,7 +4,7 @@ import time, json
 import memcache
 shared = memcache.Client(['127.0.0.1:11211'], debug=0)    
 
-img = pygame.image.load('img.bmp')
+img = pygame.image.load('/home/pi/openag_brain_box/img.bmp')
 
 screen = pygame.display.set_mode((800, 480),pygame.NOFRAME)
 pygame.mouse.set_visible(False)
@@ -41,10 +41,10 @@ while running:
             x,y = pygame.mouse.get_pos()
             if 320<x<800:
                 if toggle:
-                    img_file = 'canny.bmp'
+                    img_file = '/home/pi/openag_brain_box/canny.bmp'
                     toggle = False
                 else:
-                    img_file = 'img.bmp'    
+                    img_file = '/home/pi/openag_brain_box/img.bmp'    
                     toggle = True
                 img = pygame.image.load(img_file)
                 img = pygame.transform.scale(img, (480, 480))
