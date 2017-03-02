@@ -103,6 +103,10 @@ Verify installation:
 ```
 python3 -m pylibftdi.examples.list_devices
 ```
+Should see something like this:
+```
+FTDI:FT230X Basic UART:DO009P10
+```
 Source: https://github.com/AtlasScientific/Raspberry-Pi-sample-code
 
 ## Setup capturing images every 60 seconds
