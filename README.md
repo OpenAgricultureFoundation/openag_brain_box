@@ -122,6 +122,7 @@ python3 /home/pi/openag_brain_box/poll_sensors.py
 2. Pannel settings
 3. Advanced tab
 4. Check the box for minimize panel when not in use
+5. Set pixel count to 0
 
 
 
