@@ -15,14 +15,20 @@ Brain box proof of concept. Hardware features a raspberry pi with 7" multipoint 
 ![box] (photos/box.jpeg)
 
 # Software Installation
-From Raspbian Jessie
+Flash Raspbian Jessie to device
+
+Clone repo
+```
+cd ~/
+git clone https://github.com/OpenAgInitiative/openag_brain_box.git
+```
 
 Run install script
 ```
 ./install.sh
 ```
 
-## Fixes for DS18B20's w1thermsensor dependency
+## Finish setting up w1thermsensor for ds18b20
 Edit boot config file
 ```
 sudo nano /boot/config.txt
@@ -46,7 +52,7 @@ HWID: 0000068b7f41 Type: DS18B20
 
 Source: http://raspberrypi.stackexchange.com/questions/26623/ds18b20-not-listed-in-sys-bus-w1-devices
 
-## Fixes for Atlas Scientific sensors
+## Finish setting libftdi for atlas sensors
 Create udev rule file
 ```
 sudo nano /etc/udev/rules.d/99-libftdi.rules
@@ -77,9 +83,39 @@ python3 -m pylibftdi.examples.list_devices
 ```
 Source: https://github.com/AtlasScientific/Raspberry-Pi-sample-code
 
+## Setup capturing images every 60 seconds
+Make image capture script executable
+```
+chmod +x ~/openag_brain_box/get_img.sh
+```
+Open crontab config
+```
+crontab -e
+```
+Add line
+```
+* * * * * /home/pi/openag_brain_box/get_img.sh
+```
 
+## Add GUI to start automatically on startup
+Modify the lxde autostart config file:
+```
+sudo nano /home/pi/.config/lxsession/LXDE-pi/autostart
+```
+Add line
+```
+/home/pi/openag_brain_box/run_gui.py
+```
 
-
+## Add sensor polling to start automatically on startup
+Modify the rc.local file
+```
+sudo nano /etc/rc.local
+```
+Add line **BEFORE "exit 0"**:
+```
+python3 /home/pi/openag_brain_box/poll_sensors.py
+```
 
 
 
