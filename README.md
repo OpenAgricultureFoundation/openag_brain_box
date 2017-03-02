@@ -126,8 +126,10 @@ Add line
 ## Add GUI to start automatically on startup
 Modify the lxde autostart config file:
 ```
-sudo nano /home/pi/.config/lxsession/LXDE-pi/autostart
+nano /home/pi/.config/lxsession/LXDE-pi/autostart
 ```
+Note: **DO NOT USE "sudo nano"** to edit the script
+
 Add line
 ```
 @python /home/pi/openag_brain_box/run_gui.py
