@@ -117,5 +117,12 @@ Add line **BEFORE "exit 0"**:
 python3 /home/pi/openag_brain_box/poll_sensors.py
 ```
 
+## Minimize Task Bar in Raspi desktop GUI
+1. Right click on taskbar
+2. Pannel settings
+3. Advanced tab
+4. Check the box for minimize panel when not in use
+
+
 
 
