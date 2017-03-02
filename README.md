@@ -128,7 +128,6 @@ Modify the lxde autostart config file:
 ```
 nano /home/pi/.config/lxsession/LXDE-pi/autostart
 ```
-Note: **DO NOT USE "sudo nano"** to edit the script
 
 Add line
 ```
