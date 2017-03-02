@@ -104,7 +104,7 @@ sudo nano /home/pi/.config/lxsession/LXDE-pi/autostart
 ```
 Add line
 ```
-/home/pi/openag_brain_box/run_gui.py
+@python /home/pi/openag_brain_box/run_gui.py
 ```
 
 ## Add sensor polling to start automatically on startup
