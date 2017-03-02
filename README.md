@@ -22,7 +22,11 @@ Edit raspi settings
 ```
 sudo raspi-config
 ```
-Select Advanced Options and enable SSH / I2C. It is recommended to ssh in from an external machine now. 
+Change the password
+
+Select Advanced Options and enable SSH / I2C. 
+
+It is recommended to ssh in from an external machine now. 
 
 To get the ip of the rpi
 ```
