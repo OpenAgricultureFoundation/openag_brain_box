@@ -18,18 +18,31 @@ Brain box proof of concept. Hardware features a raspberry pi with 7" multipoint 
 Follow this tutorial to get Raspbian Jessie to boot from the external SSD: http://www.berryterminal.com/doku.php/berryboot
 
 ## Setup desktop interface
-1. Edit raspi settings
+Edit raspi settings
 ```
 sudo raspi-config
 ```
-2. Select 7. Advanced Options
-3. Enable SSH
-4. Enable I2C
+Change the password
+
+Select Advanced Options and enable SSH / I2C. 
+
+It is recommended to ssh in from an external machine now. 
+
+To get the ip of the rpi
+```
+ifconfig
+```
 
 Clone repo
 ```
 cd ~/
 git clone https://github.com/OpenAgInitiative/openag_brain_box.git
+```
+
+Make install script executable
+```
+cd ~/openag_brain_box
+chmod +x install.sh
 ```
 
 Run install script
@@ -89,6 +102,10 @@ USB_PID_LIST = [0x6001, 0x6010, 0x6011, 0x6014, 0x6015]
 Verify installation:
 ```
 python3 -m pylibftdi.examples.list_devices
+```
+Should see something like this:
+```
+FTDI:FT230X Basic UART:DO009P10
 ```
 Source: https://github.com/AtlasScientific/Raspberry-Pi-sample-code
 
