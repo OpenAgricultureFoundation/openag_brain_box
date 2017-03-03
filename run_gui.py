@@ -17,7 +17,7 @@ myfont = pygame.font.SysFont("monospace", 20)
 x = 0
 y = 0
 toggle = False
-img_file = 'img.bmp'
+img_file = '/home/pi/openag_brain_box/img.bmp'
 running = True
 start_time = time.time()
 
