@@ -17,12 +17,19 @@ Brain box proof of concept. Hardware features a raspberry pi with 7" multipoint 
 # Software Installation
 Follow this tutorial to get Raspbian Jessie to boot from the external SSD: http://www.berryterminal.com/doku.php/berryboot
 
-## Setup desktop interface
+## Minimize Task Bar in Raspi desktop GUI
+1. Right click on taskbar
+2. Pannel settings
+3. Advanced tab
+4. Check the box for minimize panel when not in use
+5. Set pixel count to 0
+
+## Edit Raspi-config
 Edit raspi settings
 ```
 sudo raspi-config
 ```
-Change the password
+Change the password to whatever you want
 
 Select Advanced Options and enable SSH / I2C. 
 
@@ -144,12 +151,26 @@ Add line **BEFORE "exit 0"**:
 python3 /home/pi/openag_brain_box/poll_sensors.py
 ```
 
-## Minimize Task Bar in Raspi desktop GUI
-1. Right click on taskbar
-2. Pannel settings
-3. Advanced tab
-4. Check the box for minimize panel when not in use
-5. Set pixel count to 0
+## Install LiFePO4wered
+Clone Repo
+```
+git clone https://github.com/xorbit/LiFePO4wered-Pi.git
+```
+Build the code
+```
+cd LiFePO4wered-Pi/
+./build.py
+```
+Install the code
+```
+sudo ./INSTALL.sh
+```
+Reboot
+```
+sudo reboot
+```
+Source: https://github.com/xorbit/LiFePO4wered-Pi
+
 
 
 
