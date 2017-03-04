@@ -5,6 +5,7 @@ The Brain Box Prototype's hardware features a raspberry pi with a 7" multipoint 
 ![](completed_prototype_photos/brain_box_complete.jpeg)
 
 ## Repo Contents
-1. [Prototype Software Installation Instructions](./prototype_software_installation_instructions.md)
-2. [Prototype Wiring Instructions](./prototype_wiring_instructions.md)
-3. [The README from the Brain Box Proof of Concept](./proof_of_concept_readme.md)
+1. [Bill of Materials](./BOM.csv)
+2. [Prototype Software Installation Instructions](./prototype_software_installation_instructions.md)
+3. [Prototype Wiring Instructions](./prototype_wiring_instructions.md)
+4. [The README from the Brain Box Proof of Concept](./proof_of_concept_readme.md)
