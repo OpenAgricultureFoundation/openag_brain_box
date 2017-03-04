@@ -1,19 +1,30 @@
 # Prototype Wiring Instructions
 
-## Connectorize the Relay
-![](prototype_wiring_photos/relay_connectorized.jpeg)
+## Connectorize the AM2315 Temperature & Humidity Sensor
+![](prototype_wiring_photos/am2315_temperature_humidity_sensor_connectorized.jpeg)
 
-------------------------------------------------------
+-------------------------------------------------------
+
+## Connectorize the MHZ16 CO2 Sensor
+
+![](prototype_wiring_photos/mhz16_co2_sensor_connectorized.jpeg)
+
+-------------------------------------------------------
 
 ## Connectorize the Grove O2 Sensor
 ![](prototype_wiring_photos/grove_o2_sensor_connectorized.jpeg)
 
-### Connect Grove O2 Sensor to USB GPIO Board
+## Connect Grove O2 Sensor to USB GPIO Board
 ![](prototype_wiring_photos/grove_o2_sensor_connected_to_usb_gpio_board.jpeg)
 
 ![](prototype_wiring_photos/grove_o2_sensor_connected_to_usb_gpio_board_close_up.jpeg)
 
 -------------------------------------------------------
+
+## Connectorize the Relay
+![](prototype_wiring_photos/relay_connectorized.jpeg)
+
+------------------------------------------------------
 
 ## Connectorize the IDC Cable
 ![](prototype_wiring_photos/idc_cable_connectorized.jpeg)
@@ -43,3 +54,10 @@
 
 ### IDC Cable to LED
 ![](prototype_wiring_photos/idc_cable_to_led.jpeg)
+
+-------------------------------------------------------
+
+## Connect all of the Remaining Components
+![](prototype_wiring_photos/brain_box_connected.jpeg)
+
+![](prototype_wiring_photos/brain_box_connected_close_up.jpeg)
