@@ -2,6 +2,9 @@
 Code for interfacing with Atlas Scientific pH sensor connected to usb adaptor board
 """
 from atlas_device import AtlasDevice
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class AtlasPh:
     """
@@ -18,22 +21,25 @@ class AtlasPh:
         self.connect()
 
     def connect(self):
-        if not self.pseudo:
-            try:
-                self.device = AtlasDevice(self.device_id)
-                self.device.send_cmd('C,0') # turn off continuous mode
-                time.sleep(1)
-                dev.flush()
-                print('Connected to Atlas pH sensor')
-            except:
-                if self.sensor_is_connected:
-                    print('Unable to connect to Atlas pH sensor')
-                    self.sensor_is_connected = False
-        else:
-            print('Connected to pseudo Atlas pH sensor')
+        if self.pseudo:
+            logger.info('Connected to pseudo Atlas pH sensor')
+            return
+        try:
+            self.device = AtlasDevice(self.device_id)
+            self.device.send_cmd('C,0') # turn off continuous mode
+            time.sleep(1)
+            dev.flush()
+            logger.info('Connected to Atlas pH sensor')
+        except:
+            if self.sensor_is_connected:
+                logger.warning('Unable to connect to Atlas pH sensor')
+                self.sensor_is_connected = False
 
     def poll(self):
-        if not self.pseudo:
+        if self.pseudo:
+            self.ph = 6.4
+            return
+        if self.sensor_is_connected:
             try:
                 self.device.send_cmd("R")
                 lines = self.device.read_lines()
@@ -42,9 +48,9 @@ class AtlasPh:
                         self.ph = float(lines[i])
             except:
                 self.ph = None
-                self.connect()
+                self.sensor_is_connected = False
         else:
-            self.ph = 6.4
+            self.connect()
 
     def transmitToConsole(self):
         if self.ph is not None:

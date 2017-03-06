@@ -3,6 +3,9 @@ This module consists of code for interacting with a MHZ16 CO2 sensor.
 """
 
 # import NDIR
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class MHZ16:
     """
@@ -19,18 +22,18 @@ class MHZ16:
 
     def connect(self):
         if self.pseudo:
-            print('Connected to pseudo MHZ16 CO2 sensor')
+            logger.info('Connected to pseudo MHZ16 CO2 sensor')
             return
         try:
             self.sensor = NDIR.Sensor(i2c_addr)
             self.sensor.begin()
             if not self.sensor_is_connected:
                 self.sensor_is_connected = True
-                print('Connected to MHZ16 CO2 sensor')
+                logger.info('Connected to MHZ16 CO2 sensor')
         except:
             if self.sensor_is_connected: # Avoid saturating the logs
                  self.sensor_is_connected = False
-                 print('Unable to connect to MHZ16 CO2 sensor')
+                 logger.warning('Unable to connect to MHZ16 CO2 sensor')
 
 
     def poll(self):

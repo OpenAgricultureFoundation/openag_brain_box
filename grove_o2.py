@@ -3,6 +3,9 @@ This module consists of code for interacting with a Grove O2 sensor.
 """
 
 import serial
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class GroveO2:
     """
@@ -21,17 +24,17 @@ class GroveO2:
 
     def connect(self):
         if self.pseudo:
-            print('Connected to pseudo Grove O2 sensor')
+            logger.info('Connected to pseudo Grove O2 sensor')
             return
         try:
             self.serial = serial.Serial(self.serial_port, 19200, timeout=1)
             if not self.sensor_is_connected:
                 self.sensor_is_connected = True
-                print('Connected to Grove O2 sensor')
+                logger.info('Connected to Grove O2 sensor')
         except:
             if self.sensor_is_connected:
                 self.sensor_is_connected = False
-                print('Unable to connect to Grove O2 sensor')
+                logger.warning('Unable to connect to Grove O2 sensor')
 
     def poll(self):
         if self.pseudo:

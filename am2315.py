@@ -5,7 +5,9 @@ humidity sensor.
 
 import time
 import quick2wire.i2c as qI2c
-import memcache
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class AM2315:
     """
@@ -42,18 +44,18 @@ class AM2315:
 
     def connect(self):
         if self.pseudo:
-            print('Connected to pseudo AM2315 temp/humidity sensor')
+            logger.info('Connected to pseudo AM2315 temperature & humidity sensor')
             return
         try:
             self.__i2c = qI2c
             self.__i2cMaster = qI2c.I2CMaster(self.i2c_bus)
             if not self.sensor_is_connected:
                 self.sensor_is_connected = True
-                print('Connected to AM2315 temp/humidity sensor')
+                logger.info('Connected to AM2315 temperature & humidity sensor')
         except:
             if self.sensor_is_connected:
                 self.sensor_is_connected = False
-                print('Unable to connect to AM2315 temp/humidity sensor')
+                logger.warning('Unable to connect to AM2315 temp/humidity sensor')
 
     def poll(self):
         if self.pseudo:
