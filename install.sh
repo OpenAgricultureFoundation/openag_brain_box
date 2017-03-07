@@ -19,4 +19,12 @@ sudo apt-get install python-opencv
 
 # Install fswebcam
 sudo apt-get install fswebcam
-#sudo pip install quick2wire-api
+
+# Fix incorrect mouse detection with pygame in raspbian jessie environment
+# Note: not sure if this is actually necessary. running gui from local machine,
+# the mouse detection is accurate. when launching gui script from remote
+# machine (via ssh), the mouse tracking is off. in practice, this is a non-issue
+# since the ui will always be launched at startup. however without knowing this,
+# it can made development frustrating....just going to comment this out for now
+# chmod +x installsdl.sh
+# ./installsdl.sh

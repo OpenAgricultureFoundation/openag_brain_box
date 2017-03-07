@@ -17,7 +17,7 @@ class GUI:
             pygame.init()
             pygame.camera.init()
             pygame.mouse.set_visible(False)
-            self.screen = pygame.display.set_mode((800,480),0)
+            self.screen = pygame.display.set_mode((800,480),pygame.NOFRAME)
             self.cam_list = pygame.camera.list_cameras()
             self.webcam = pygame.camera.Camera(self.cam_list[0],(32,24))
             self.webcam.start()
@@ -122,6 +122,7 @@ class GUI:
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONUP:
                 x,y = pygame.mouse.get_pos()
+                logger.info('{}, {}'.format(x,y))
                 if 320<x<800:
                     if self.canny:
                         self.canny = False
