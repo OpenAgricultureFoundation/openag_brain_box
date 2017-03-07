@@ -8,7 +8,6 @@ from ds18b20 import DS18B20
 from grove_o2 import GroveO2
 
 # TODO: test this code on actual device
-# TODO: add logging
 # TODO: add ros transmissions
 # TODO: bring image acquisition into python, prevent simultaneous r/w
 # TODO: add tests
