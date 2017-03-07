@@ -102,20 +102,6 @@ FTDI:FT230X Basic UART:DO009P10
 ```
 Source: https://github.com/AtlasScientific/Raspberry-Pi-sample-code
 
-## Setup capturing images every 60 seconds
-Make image capture script executable
-```
-chmod +x ~/openag_brain_box/get_img.sh
-```
-Open crontab config
-```
-crontab -e
-```
-Add line
-```
-* * * * * /home/pi/openag_brain_box/get_img.sh
-```
-
 ## Add GUI to start automatically on startup
 Modify the lxde autostart config file:
 ```
