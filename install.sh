@@ -19,3 +19,4 @@ sudo apt-get install python-opencv
 
 # Install fswebcam
 sudo apt-get install fswebcam
+#sudo pip install quick2wire-api
