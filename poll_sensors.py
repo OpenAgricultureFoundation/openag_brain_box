@@ -13,7 +13,7 @@ from grove_o2 import GroveO2
 # TODO: add tests
 
 if __name__ == '__main__':
-    memcache_shared = memcache.Client(['127.0.0.1:11211'], debug=0)
+    shared = memcache.Client(['127.0.0.1:11211'], debug=0)
     mhz16_1 = MHZ16(pseudo=True)
     am2315_1 = AM2315(pseudo=True)
     atlas_ph_1 = AtlasPh('DO009P10', pseudo=True)
@@ -23,21 +23,21 @@ if __name__ == '__main__':
 
     while True:
         mhz16_1.poll()
-        mhz16_1.transmitToConsole()
+        mhz16_1.transmitToMemcache(shared)
 
         am2315_1.poll()
-        am2315_1.transmitToConsole()
+        am2315_1.transmitToMemcache(shared)
 
         atlas_ph_1.poll()
-        atlas_ph_1.transmitToConsole()
+        atlas_ph_1.transmitToMemcache(shared)
 
         atlas_ec_1.poll()
-        atlas_ec_1.transmitToConsole()
+        atlas_ec_1.transmitToMemcache(shared)
 
         ds18b20_1.poll()
-        ds18b20_1.transmitToConsole()
+        ds18b20_1.transmitToMemcache(shared)
 
         grove_o2_1.poll()
-        grove_o2_1.transmitToConsole()
+        grove_o2_1.transmitToMemcache(shared)
 
         time.sleep(1)

@@ -52,4 +52,4 @@ class DS18B20:
 
     def transmitToMemcache(self, memcache_shared, id='water_temperature'):
         if self.temperature is not None:
-            memcache_shared.set(id, '{0:.0f}'.format(self.temperature))
+            memcache_shared.set(id, '{0:.1f}'.format(self.temperature))

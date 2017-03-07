@@ -38,7 +38,7 @@ class MHZ16:
 
     def poll(self):
         if self.pseudo:
-            self.co2 = 419.8
+            self.co2 = 415
             return
         if self.sensor_is_connected:
             try:

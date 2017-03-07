@@ -58,6 +58,6 @@ class AtlasEc:
         if self.ec is not None:
             print('AtlasEc EC: ', self.ec, 'ms/cm')
 
-    def transmitToMemcache(self, memcache_shared, ec_id='ec'):
+    def transmitToMemcache(self, memcache_shared, id='ec'):
         if self.ec is not None:
-            memcache_shared.set(id, "{0:.1f}".format(self.ec))
+            memcache_shared.set(id, '{0:.1f}'.format(self.ec))

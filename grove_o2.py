@@ -58,4 +58,4 @@ class GroveO2:
 
     def transmitToMemcache(self, memcache_shared, id='o2'):
         if self.o2 is not None:
-            memcache_shared.set(id, '{0:.0f}'.format(self.o2))
+            memcache_shared.set(id, '{0:.1f}'.format(self.o2))

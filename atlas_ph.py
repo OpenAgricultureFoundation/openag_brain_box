@@ -56,6 +56,6 @@ class AtlasPh:
         if self.ph is not None:
             print('AtlasPh pH: ', self.ph, 'pH')
 
-    def transmitToMemcache(self, memcache_shared, ph_id='ph'):
+    def transmitToMemcache(self, memcache_shared, id='ph'):
         if self.ph is not None:
-            memcache_shared.set(id, "{0:.1f}".format(self.ph))
+            memcache_shared.set(id, '{0:.1f}'.format(self.ph))
