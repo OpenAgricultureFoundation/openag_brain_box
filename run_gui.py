@@ -110,7 +110,6 @@ while True:
     screen.blit(ph_label, (50, 300))
     screen.blit(ec_label, (50, 350))
 
-
     #draw all updates to display
     pygame.display.update()
 
