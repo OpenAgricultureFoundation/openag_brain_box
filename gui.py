@@ -7,20 +7,32 @@ import json
 import memcache
 import cv2
 import numpy as np
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class GUI:
     def __init__(self):
-        pygame.init()
-        pygame.camera.init()
-        pygame.mouse.set_visible(False)
+        try:
+            pygame.init()
+            pygame.camera.init()
+            pygame.mouse.set_visible(False)
+            self.screen = pygame.display.set_mode((800,480),0)
+            self.cam_list = pygame.camera.list_cameras()
+            self.webcam = pygame.camera.Camera(self.cam_list[0],(32,24))
+            self.webcam.start()
+            self.myfont = pygame.font.SysFont("monospace", 20)
+            logger.info('Initialized pygame display')
+        except:
+            logger.warning('Unable to initialize pygame display')
 
-        self.shared = memcache.Client(['127.0.0.1:11211'], debug=0)
+        try:
+            self.shared = memcache.Client(['127.0.0.1:11211'], debug=0)
+            logger.info('Initialized memcache client')
+        except:
+            logger.warning('Unable to initialize memcache client')
+
         self.canny = False
-        self.screen = pygame.display.set_mode((800,480),0)
-        self.cam_list = pygame.camera.list_cameras()
-        self.webcam = pygame.camera.Camera(self.cam_list[0],(32,24))
-        self.webcam.start()
-        self.myfont = pygame.font.SysFont("monospace", 20)
         self.ph = '6.5'
         self.ec = '3.2'
         self.water_temp = '20.1'
@@ -104,7 +116,7 @@ class GUI:
 
     def handleEvents(self):
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE) :
                 self.webcam.stop()
                 pygame.quit()
                 sys.exit()
