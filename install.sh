@@ -28,3 +28,8 @@ sudo apt-get install fswebcam
 # it can made development frustrating....just going to comment this out for now
 # chmod +x installsdl.sh
 # ./installsdl.sh
+
+
+# Install matplotlib
+sudo apt-get install python-matplotlib
+

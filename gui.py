@@ -11,6 +11,25 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+#from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas ##
+#from matplotlib.figure import Figure ##
+
+# import matplotlib.pyplot
+# import Image
+#
+# import pandas as pd
+
+# from bokeh.plotting import figure, show, output_file
+# from bokeh.palettes import brewer
+# from bokeh.resources import CDN
+# from bokeh.embed import file_html
+# from bokeh.objects import PreviewSaveTool
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+
+
 class GUI:
     def __init__(self):
         try:
@@ -21,11 +40,9 @@ class GUI:
             self.cam_list = pygame.camera.list_cameras()
             self.webcam = pygame.camera.Camera(self.cam_list[0],(32,24))
             self.webcam.start()
-            self.myfont = pygame.font.SysFont("monospace", 20)
             logger.info('Initialized pygame display')
         except:
             logger.warning('Unable to initialize pygame display')
-
         try:
             self.shared = memcache.Client(['127.0.0.1:11211'], debug=0)
             logger.info('Initialized memcache client')
@@ -40,20 +57,59 @@ class GUI:
         self.humidity = '38'
         self.co2 = '410'
         self.o2 = '17.1'
+        # self.figure = matplotlib.pyplot.figure()
+        # self.plot = self.figure.add_subplot(111)
+        self.runSeabornEx()
+
+
+    def convertFigureToSurface(self, fig):
+        fig.canvas.draw()
+        buf = fig.canvas.tostring_rgb()
+        ncols, nrows = fig.canvas.get_width_height()
+        array = np.fromstring(buf, dtype=np.uint8).reshape(nrows, ncols, 3)
+        array = np.fliplr(array)
+        array = np.rot90(array)
+        surface = pygame.surfarray.make_surface(array)
+        pygame.transform.scale(surface,(800,480))
+        return surface
+
+    def runMatplotEx(self):
+        x = np.arange (0, 100, 0.1)
+        y = np.sin(x)/x
+        self.plot.plot(x, y)
+        array = self.convertFigureToRGB(self.figure)
+        array = np.fliplr(array)
+        array = np.rot90(array)
+        surface = pygame.surfarray.make_surface(array)
+        surface = pygame.transform.scale(surface,(800,480))
+        self.screen.blit(surface,(0,0))
+
+    def runSeabornEx(self):
+        self.fig, self.ax = plt.subplots()
+        # sns.set(style="darkgrid")
+        self.gammas = sns.load_dataset("gammas")
+        sns.tsplot(data=self.gammas, time="timepoint", unit="subject",
+                   condition="ROI", value="BOLD signal", ax=self.ax)
+
+        self.surface = self.convertFigureToSurface(self.fig)
+        self.screen.blit(self.surface,(0,0))
 
     def run(self):
-        self.blitVideoStream()
-        self.receiveSensorValuesFromMemcache()
-        self.blitSensorValues()
+        # self.blitVideoStream()
+        # self.receiveSensorValuesFromMemcache()
+        # self.blitSensorValues()
+        # self.runMatplotEx()
+        # self.runSeabornEx()
         pygame.display.update()
         self.handleEvents()
 
     def blitVideoStream(self):
         imagen = self.webcam.get_image()
-        imagen = pygame.transform.scale(imagen,(480,480))
+        imagen = pygame.transform.scale(imagen,(800,480))
         if self.canny:
             imagen = self.computeCanny(imagen)
-        self.screen.blit(imagen,(320,0))
+
+        self.screen.blit(imagen,(0,0))
 
     def receiveSensorValuesFromMemcache(self):
         val = self.shared.get('ph')
@@ -85,34 +141,55 @@ class GUI:
             self.o2=val
 
     def blitSensorValues(self):
-        air_temp_string = "air temp: " + self.air_temp + " C"
-        air_temp_label = self.myfont.render(air_temp_string, 1, (255, 255, 255))
+        white = [255,255,255]
+        black = [0,0,0]
+        light_blue = [142,255,255]
+        dark_blue = [47,114,255]
 
-        humidity_string = "humidity: " + self.humidity + " %"
-        humidity_label = self.myfont.render(humidity_string, 1, (255, 255, 255))
+        # 3 cards unequal
+        # pygame.draw.rect(self.screen, other_color, (0,0,314,77))
+        # pygame.draw.rect(self.screen, air_color, (0,83,314,197))
+        # pygame.draw.rect(self.screen, water_color, (0,286,314,197))
 
-        co2_string = "co2: " + self.co2 + " ppm"
-        co2_label = self.myfont.render(co2_string, 1, (255, 255, 255))
+        # 3 cards equal
+        # pygame.draw.rect(self.screen, other_color, (0,0,314,157))
+        # pygame.draw.rect(self.screen, air_color, (0,163,314,157))
+        # pygame.draw.rect(self.screen, water_color, (0,326,314,157))
 
-        o2_string = "o2: " + self.o2 + " %"
-        o2_label = self.myfont.render(o2_string, 1, (255, 255, 255))
+        # One sensor card per
+        self.createSensorCard(0, 'Air Temp: {}C'.format(self.air_temp), white, black)
+        self.createSensorCard(1, 'Humidity: {} %'.format(self.humidity), light_blue, black)
+        self.createSensorCard(2, 'CO2: {} ppm'.format(self.co2), white, black)
+        self.createSensorCard(3, 'O2: {} %'.format(self.o2), light_blue, black)
+        self.createSensorCard(4, 'Water Temp: {} C'.format(self.water_temp), white, black)
+        self.createSensorCard(5, 'pH: {}'.format(self.ph), light_blue, black)
+        self.createSensorCard(6, 'EC: {} ms/cm'.format(self.ec), white, black)
 
-        water_temp_string = "water temp: " + self.water_temp + " C"
-        water_temp_label = self.myfont.render(water_temp_string, 1, (255, 255, 255))
+    def createSensorCard(self, pos, msg, box_color=None, text_color=None):
+        width = 316
+        height = 64
+        spacing = 6
+        box_colors = [[255,255,255], [0,0,0]]
+        text_colors = [[0,0,0], [255,255,255]]
+        x = 0
+        y = (height + spacing) * pos
+        font_style = 'freesans.ttf'
+        font_size = 30
 
-        ph_string = "pH: " + self.ph + " ph"
-        ph_label = self.myfont.render(ph_string, 1, (255, 255, 255))
+        if box_color is None:
+            box_color = box_colors[pos%2]
+        if text_color is None:
+            text_color = text_colors[pos%2]
 
-        ec_string = "ec: " + self.ec + " ms/cm"
-        ec_label = self.myfont.render(ec_string, 1, (255, 255, 255))
+        pygame.draw.rect(self.screen, box_color, (x,y,width,height))
+        font = pygame.font.SysFont(font_style, font_size)
+        text_surf, text_rect = self.textObjects(msg, font, text_color)
+        text_rect.center = ( (x+(width/2)), (y+(height/2)) )
+        self.screen.blit(text_surf, text_rect)
 
-        self.screen.blit(air_temp_label, (50, 50))
-        self.screen.blit(humidity_label, (50, 100))
-        self.screen.blit(co2_label, (50, 150))
-        self.screen.blit(o2_label, (50, 200))
-        self.screen.blit(water_temp_label, (50, 250))
-        self.screen.blit(ph_label, (50, 300))
-        self.screen.blit(ec_label, (50, 350))
+    def textObjects(self, text, font, color):
+        text_surface = font.render(text, True, color)
+        return text_surface, text_surface.get_rect()
 
     def handleEvents(self):
         for event in pygame.event.get():
@@ -131,6 +208,7 @@ class GUI:
 
     def computeCanny(self, surface):
         array = pygame.surfarray.pixels3d(surface)
+        # print(array.shape)
         array = cv2.cvtColor(array, cv2.COLOR_BGR2GRAY)
         array = cv2.GaussianBlur(array, (5, 5), 0)
         array = cv2.Canny(array, 30, 150)
