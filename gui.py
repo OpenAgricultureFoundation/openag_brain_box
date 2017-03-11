@@ -59,7 +59,7 @@ class GUI:
         self.o2 = '17.1'
         # self.figure = matplotlib.pyplot.figure()
         # self.plot = self.figure.add_subplot(111)
-        self.runSeabornEx()
+        # self.runSeabornEx()
 
 
     def convertFigureToSurface(self, fig):
@@ -87,17 +87,18 @@ class GUI:
     def runSeabornEx(self):
         self.fig, self.ax = plt.subplots()
         # sns.set(style="darkgrid")
-        self.gammas = sns.load_dataset("gammas")
+        # self.gammas = sns.load_dataset("gammas")
+        self.gammas = [[0,1,2,3],[0,1,2,3]]
+
         sns.tsplot(data=self.gammas, time="timepoint", unit="subject",
                    condition="ROI", value="BOLD signal", ax=self.ax)
-
         self.surface = self.convertFigureToSurface(self.fig)
         self.screen.blit(self.surface,(0,0))
 
     def run(self):
-        # self.blitVideoStream()
-        # self.receiveSensorValuesFromMemcache()
-        # self.blitSensorValues()
+        self.blitVideoStream()
+        self.receiveSensorValuesFromMemcache()
+        self.blitSensorValues()
         # self.runMatplotEx()
         # self.runSeabornEx()
         pygame.display.update()
@@ -105,11 +106,11 @@ class GUI:
 
     def blitVideoStream(self):
         imagen = self.webcam.get_image()
-        imagen = pygame.transform.scale(imagen,(800,480))
+        imagen = pygame.transform.scale(imagen,(480,480))
         if self.canny:
             imagen = self.computeCanny(imagen)
 
-        self.screen.blit(imagen,(0,0))
+        self.screen.blit(imagen,(320,0))
 
     def receiveSensorValuesFromMemcache(self):
         val = self.shared.get('ph')
@@ -157,24 +158,25 @@ class GUI:
         # pygame.draw.rect(self.screen, water_color, (0,326,314,157))
 
         # One sensor card per
-        self.createSensorCard(0, 'Air Temp: {}C'.format(self.air_temp), white, black)
-        self.createSensorCard(1, 'Humidity: {} %'.format(self.humidity), light_blue, black)
-        self.createSensorCard(2, 'CO2: {} ppm'.format(self.co2), white, black)
-        self.createSensorCard(3, 'O2: {} %'.format(self.o2), light_blue, black)
-        self.createSensorCard(4, 'Water Temp: {} C'.format(self.water_temp), white, black)
-        self.createSensorCard(5, 'pH: {}'.format(self.ph), light_blue, black)
-        self.createSensorCard(6, 'EC: {} ms/cm'.format(self.ec), white, black)
+        self.createSensorCard(0, 'Air Temp: {}C'.format(self.air_temp), black, white)
+        self.createSensorCard(1, 'Humidity: {} %'.format(self.humidity), black, white)
+        self.createSensorCard(2, 'CO2: {} ppm'.format(self.co2), black, white)
+        self.createSensorCard(3, 'O2: {} %'.format(self.o2), black, white)
+        self.createSensorCard(4, 'Water Temp: {} C'.format(self.water_temp), black, white)
+        self.createSensorCard(5, 'pH: {}'.format(self.ph), black, white)
+        self.createSensorCard(6, 'EC: {} ms/cm'.format(self.ec), black, white)
 
     def createSensorCard(self, pos, msg, box_color=None, text_color=None):
         width = 316
-        height = 64
+        height = 50 #64
         spacing = 6
         box_colors = [[255,255,255], [0,0,0]]
         text_colors = [[0,0,0], [255,255,255]]
         x = 0
-        y = (height + spacing) * pos
-        font_style = 'freesans.ttf'
-        font_size = 30
+        y_offset = 50
+        y = y_offset + (height + spacing) * pos
+        font_style = 'monospace' # monospace or 'freesans.ttf'
+        font_size = 25 #23 or 30
 
         if box_color is None:
             box_color = box_colors[pos%2]
