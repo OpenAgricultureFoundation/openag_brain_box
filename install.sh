@@ -16,7 +16,6 @@ sudo apt-get install python3-w1thermsensor
 
 # Install opencv
 sudo apt-get install python-opencv 
-sudo pip install opencv-python # TODO: make sure this installs properly
 
 # Install fswebcam
 sudo apt-get install fswebcam
