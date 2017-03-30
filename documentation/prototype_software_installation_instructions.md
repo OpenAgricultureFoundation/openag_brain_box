@@ -113,7 +113,7 @@ Add line
 @python /home/pi/openag_brain_box/run_gui.py
 ```
 
-## Add sensor polling to start automatically on startup
+## Add sensor polling & memcached server to start automatically on startup
 Modify the rc.local file
 ```
 sudo nano /etc/rc.local
@@ -121,6 +121,7 @@ sudo nano /etc/rc.local
 Add line **BEFORE "exit 0"**:
 ```
 python3 /home/pi/openag_brain_box/poll_sensors.py
+memcached &
 ```
 
 ## Test sensors
