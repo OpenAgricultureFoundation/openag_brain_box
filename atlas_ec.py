@@ -2,9 +2,9 @@
 Code for interfacing with Atlas Scientific ec sensor connected to usb adaptor board
 """
 from atlas_device import AtlasDevice
-import logging
-logging.basicConfig(level=logging.INFO)
+import logging, time
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 class AtlasEc:
     """
@@ -13,26 +13,28 @@ class AtlasEc:
     """
 
     def __init__(self, device_id, pseudo=False):
+        logger.debug('Initializing sensor')
         self.device_id = device_id # TODO: auto detect ids, i wonder if atlas
         # circuit ids have a consistent pattern to differentiate between ph & ec
         self.pseudo = pseudo
-        self.sensor_is_connected = True
+        self.sensor_is_connected = False
         self.ec = None
         self.connect()
 
     def connect(self):
         if self.pseudo:
-            logger.info('Connected to pseudo Atlas EC sensor')
+            logger.info('Connected to sensor')
             return
         try:
             self.device = AtlasDevice(self.device_id)
             self.device.send_cmd('C,0') # turn off continuous mode
             time.sleep(1)
-            dev.flush()
-            logger.info('Connected to Atlas EC sensor')
+            self.device.flush()
+            self.sensor_is_connected = True
+            logger.info('Connected to sensor')
         except:
             if self.sensor_is_connected:
-                logger.warning('Unable to connect to Atlas EC sensor')
+                logger.warning('Unable to connect to sensor')
                 self.sensor_is_connected = False
 
 

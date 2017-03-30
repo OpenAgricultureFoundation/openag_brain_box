@@ -2,10 +2,11 @@
 This module consists of code for interacting with a MHZ16 CO2 sensor.
 """
 
-# import NDIR
+import NDIR
+import time
 import logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 class MHZ16:
     """
@@ -14,36 +15,37 @@ class MHZ16:
     """
 
     def __init__(self, i2c_addr=0x4D, pseudo=False):
+        logger.debug('Initializing sensor')
         self.i2c_addr = i2c_addr
         self.pseudo = pseudo
-        self.sensor_is_connected = True
+        self.sensor_is_connected = False
         self.co2 = None
         self.connect()
 
     def connect(self):
+        logger.debug('Trying to connect to sensor')
+
         if self.pseudo:
-            logger.info('Connected to pseudo MHZ16 CO2 sensor')
+            logger.info('Connected as a pseudo sensor')
             return
         try:
-            self.sensor = NDIR.Sensor(i2c_addr)
+            self.sensor = NDIR.Sensor(0x4D)
             self.sensor.begin()
-            if not self.sensor_is_connected:
-                self.sensor_is_connected = True
-                logger.info('Connected to MHZ16 CO2 sensor')
+            self.sensor_is_connected = True
+            logger.info('Connected to sensor')
         except:
-            if self.sensor_is_connected: # Avoid saturating the logs
-                 self.sensor_is_connected = False
-                 logger.warning('Unable to connect to MHZ16 CO2 sensor')
-
+            self.sensor_is_connected = False
+            logger.warning('Unable to connect to sensor')
 
     def poll(self):
         if self.pseudo:
             self.co2 = 415
             return
+
         if self.sensor_is_connected:
             try:
-                sensor.measure()
-                self.co2 = sensor.ppm
+                self.sensor.measure()
+                self.co2 = self.sensor.ppm
             except:
                 self.co2 = None
                 self.sensor_is_connected = False

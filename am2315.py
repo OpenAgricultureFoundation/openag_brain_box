@@ -1,70 +1,81 @@
-"""
-This module consists of code for interacting with the AM2315 temperature and
-humidity sensor.
-"""
+# am2315 class by ThreeSixes (https://github.com/ThreeSixes/py-am2315)
+# This was originally part of the OpenWeatherStn project (https://github.com/ThreeSixes/OpenWeatherStn)
+
+###########
+# Imports #
+###########
 
 import time
 import quick2wire.i2c as qI2c
 import logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+################
+# am2315 class #
+################
 
 class AM2315:
     """
-    Class that represents a AM2315 temperature and humidity sensor instance
-    and provides functions for interfacing with the sensor.
-    """
+    am2315 is a class that supports communication with an I2C-connected AOSONG AM2315 encased temperature and humidity sensor. The constructor for this class accepts one argement:
 
-    def __init__(self, i2c_addr = 0x5c, i2c_bus = 1, pseudo=False):
-        self.i2c_addr = i2c_addr
-        self.i2c_bus = i2c_bus
+    am3215Addr: I2C address of the sensor, but will default to 0x5c if it's not specified. This defaults to 0x5c.
+    i2cBusID: Bus ID number that the sensor is attached to. This defaults to 1 (the default bus ID on newer Raspberry Pis.)
+    """
+    regRhMSB = 0x00
+    regRhLSB = 0x01
+    regTmpMSB = 0x02
+    regTmpLSB = 0x03
+    regModelHi = 0x08
+    regModelLo = 0x09
+    regVersion = 0x0a
+    regIDA = 0x0b
+    regIDB = 0x0c
+    regIDD = 0x0d
+    regIDE = 0x0e
+    regStat = 0x0f
+    regUsrAMSB = 0x10
+    regUsrALSB = 0x11
+    regUsrBMSB = 0x12
+    regUsrBLSB = 0x13
+    cmdReadReg = 0x03
+
+    # The config variables are based on the AM2315 datasheet
+    def __init__(self, i2c_addr = 0x5c, pseudo=False):
+        logger.debug('Initializing sensor')
+        self.__addr = i2c_addr
         self.pseudo = pseudo
+        self.sensor_is_connected = False
         self.temperature = None
         self.humidity = None
-        self.sensor_is_connected = True
-        self.regRhMSB = 0x00
-        self.regRhLSB = 0x01
-        self.regTmpMSB = 0x02
-        self.regTmpLSB = 0x03
-        self.regModelHi = 0x08
-        self.regModelLo = 0x09
-        self.regVersion = 0x0a
-        self.regIDA = 0x0b
-        self.regIDB = 0x0c
-        self.regIDD = 0x0d
-        self.regIDE = 0x0e
-        self.regStat = 0x0f
-        self.regUsrAMSB = 0x10
-        self.regUsrALSB = 0x11
-        self.regUsrBMSB = 0x12
-        self.regUsrBLSB = 0x13
-        self.cmdReadReg = 0x03
-
         self.connect()
 
     def connect(self):
+        logger.debug('Trying to connect sensor')
         if self.pseudo:
-            logger.info('Connected to pseudo AM2315 temperature & humidity sensor')
+            logger.info('Connected to pseudo sensor')
             return
         try:
             self.__i2c = qI2c
-            self.__i2cMaster = qI2c.I2CMaster(self.i2c_bus)
-            if not self.sensor_is_connected:
-                self.sensor_is_connected = True
-                logger.info('Connected to AM2315 temperature & humidity sensor')
+            self.__i2cMaster = qI2c.I2CMaster(1)
+            self.sensor_is_connected = True
+            logger.info('Connected to sensor')
         except:
-            if self.sensor_is_connected:
-                self.sensor_is_connected = False
-                logger.warning('Unable to connect to AM2315 temp/humidity sensor')
+            self.sensor_is_connected = False
+            logger.warning('Unable to connect to sensor')
 
     def poll(self):
+        logger.debug('Trying to poll sensor')
         if self.pseudo:
-            self.temperature = 23.1
-            self.humidity = 46.6
+            self.temperature = 22.1
+            self.humidity = 42.4
             return
+
         if self.sensor_is_connected:
             try:
-                self.temperature, self.humidity = self.__am2315.getTempHumid()
+                data = self.getTempHumid()
+                self.temperature = data[0]
+                self.humidity = data[1]
             except:
                 self.temperature = None
                 self.humidity = None
@@ -83,8 +94,10 @@ class AM2315:
             memcache_shared.set(temperature_id, "{0:.1f}".format(self.temperature))
             memcache_shared.set(humidity_id, "{0:.1f}".format(self.humidity))
 
-    def getSigned(self, unsigned):
+    def __getSigned(self, unsigned):
         """
+        __getSigned(number)
+
         Converts the temp reading from the AM2315 to a signed int.
         """
 
@@ -129,13 +142,13 @@ class AM2315:
 
             try:
                 # Request data from the sensor, using a reference to the command bytes.
-                self.__i2cMaster.transaction(self.__i2c.writing_bytes(self.i2c_addr, self.cmdReadReg, *thCmd))
+                self.__i2cMaster.transaction(self.__i2c.writing_bytes(self.__addr, self.cmdReadReg, *thCmd))
 
                 # Wait for the sensor to supply data to read.
                 time.sleep(0.1)
 
                 # Now read 8 bytes from the AM2315.
-                rawTH = self.__i2cMaster.transaction(self.__i2c.reading(self.i2c_addr, 8))
+                rawTH = self.__i2cMaster.transaction(self.__i2c.reading(self.__addr, 8))
 
                 # Break the string we want out of the array the transaction returns.
                 rawTH = bytearray(rawTH[0])
@@ -158,7 +171,7 @@ class AM2315:
         humidRaw = (rawTH[2] << 8) | rawTH[3]
 
         # Get signed int from AND'd temperature bytes.
-        tempRaw = self.getSigned((rawTH[4] << 8) | rawTH[5])
+        tempRaw = self.__getSigned((rawTH[4] << 8) | rawTH[5])
 
         # The return data is sacled up by 10x, so compensate.
         retVal.append(tempRaw / 10.0)

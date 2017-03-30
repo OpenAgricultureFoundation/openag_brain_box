@@ -4,8 +4,8 @@ This module consists of code for interacting with a DS18B20 Temperature sensor.
 
 from w1thermsensor import W1ThermSensor
 import logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 class DS18B20:
     """
@@ -14,24 +14,25 @@ class DS18B20:
     """
 
     def __init__(self, pseudo=False):
+        logger.debug('Initializing sensor')
         self.pseudo = pseudo
-        self.sensor_is_connected = True
+        self.sensor_is_connected = False
         self.temperature = None
         self.connect()
 
     def connect(self):
         if self.pseudo:
-            logger.info('Connected to pseudo DS18B20 temperature sensor')
+            logger.info('Connected to sensor')
             return
         try:
             self.sensor = W1ThermSensor()
             if not self.sensor_is_connected:
                 self.sensor_is_connected = True
-                logger.info('Connected to DS18B20 temperature sensor')
+                logger.info('Connected to sensor')
         except:
             if self.sensor_is_connected:
                 self.sensor_is_connected = False
-                logger.warning('Unable to connect to DS18B20 temperature sensor')
+                logger.warning('Unable to connect to sensor')
 
     def poll(self):
         if self.pseudo:

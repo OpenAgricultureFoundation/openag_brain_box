@@ -123,22 +123,20 @@ Add line **BEFORE "exit 0"**:
 python3 /home/pi/openag_brain_box/poll_sensors.py
 ```
 
-## Install LiFePO4wered
-Clone Repo
+## Test sensors
+View i2c devices
 ```
-git clone https://github.com/xorbit/LiFePO4wered-Pi.git
+i2cdetect 1
 ```
-Build the code
+Should display something like this:
 ```
-cd LiFePO4wered-Pi/
-./build.py
+0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- 4d -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
 ```
-Install the code
-```
-sudo ./INSTALL.sh
-```
-Reboot
-```
-sudo reboot
-```
-Source: https://github.com/xorbit/LiFePO4wered-Pi

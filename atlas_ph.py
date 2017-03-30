@@ -2,9 +2,9 @@
 Code for interfacing with Atlas Scientific pH sensor connected to usb adaptor board
 """
 from atlas_device import AtlasDevice
-import logging
-logging.basicConfig(level=logging.INFO)
+import logging, time
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 class AtlasPh:
     """
@@ -13,26 +13,30 @@ class AtlasPh:
     """
 
     def __init__(self, device_id, pseudo=False):
+        logger.debug('Initializing sensor')
         self.device_id = device_id # TODO: auto detect ids, i wonder if atlas
         # circuit ids have a consistent pattern to differentiate between ph & ec
         self.pseudo = pseudo
-        self.sensor_is_connected = True
+        self.sensor_is_connected = False
         self.ph = None
         self.connect()
 
     def connect(self):
         if self.pseudo:
-            logger.info('Connected to pseudo Atlas pH sensor')
+            logger.info('Connected to pseudo sensor')
             return
         try:
+            logger.debug('Trying to connect to sensor')
             self.device = AtlasDevice(self.device_id)
             self.device.send_cmd('C,0') # turn off continuous mode
             time.sleep(1)
-            dev.flush()
-            logger.info('Connected to Atlas pH sensor')
+            self.device.flush()
+            logger.info('Connected to sensor')
+            self.sensor_is_connected = True
+
         except:
             if self.sensor_is_connected:
-                logger.warning('Unable to connect to Atlas pH sensor')
+                logger.warning('Unable to connect to sensor')
                 self.sensor_is_connected = False
 
     def poll(self):
