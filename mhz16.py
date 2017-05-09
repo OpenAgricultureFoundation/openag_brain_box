@@ -7,6 +7,11 @@ import time
 import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+handler = logging.FileHandler('main.log')
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 class MHZ16:
     """
@@ -58,4 +63,5 @@ class MHZ16:
 
     def transmitToMemcache(self, memcache_shared, id='co2'):
         if self.co2 is not None:
+            logger.debug("Transmitting value to memcache: '{}': '{}'".format(id, self.co2))
             memcache_shared.set(id, "{0:.0f}".format(self.co2))

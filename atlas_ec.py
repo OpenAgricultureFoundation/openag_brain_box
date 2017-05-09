@@ -23,7 +23,7 @@ class AtlasEc:
 
     def connect(self):
         if self.pseudo:
-            logger.info('Connected to sensor')
+            logger.info('Connected to pseudo sensor')
             return
         try:
             self.device = AtlasDevice(self.device_id)

@@ -24,7 +24,7 @@ class GroveO2:
 
     def connect(self):
         if self.pseudo:
-            logger.info('Connected to pseudo Grove O2 sensor')
+            logger.info('Connected to pseudo sensor')
             return
         try:
             self.serial = serial.Serial(self.serial_port, 19200, timeout=1)
@@ -34,7 +34,7 @@ class GroveO2:
         except:
             if self.sensor_is_connected:
                 self.sensor_is_connected = False
-                logger.warning('Unable to connect to Grove O2 sensor')
+                logger.warning('Unable to connect to sensor')
 
     def poll(self):
         if self.pseudo:

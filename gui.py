@@ -10,6 +10,11 @@ import numpy as np
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+handler = logging.FileHandler('main.log')
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 #from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas ##
 #from matplotlib.figure import Figure ##
@@ -103,6 +108,7 @@ class GUI:
         # self.runSeabornEx()
         pygame.display.update()
         self.handleEvents()
+        time.sleep(1)
 
     def blitVideoStream(self):
         imagen = self.webcam.get_image()
