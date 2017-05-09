@@ -4,13 +4,7 @@ This module consists of code for interacting with a DS18B20 Temperature sensor.
 
 from w1thermsensor import W1ThermSensor
 import logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-handler = logging.FileHandler('main.log')
-handler.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
+
 
 class DS18B20:
     """
@@ -19,7 +13,16 @@ class DS18B20:
     """
 
     def __init__(self, pseudo=False):
-        logger.debug('Initializing sensor')
+        logging.basicConfig()
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.DEBUG)
+        handler = logging.FileHandler('/home/pi/openag_brain_box/ui/main.log')
+        handler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        self.logger.addHandler(handler)
+
+        self.logger.debug('Initializing sensor')
         self.pseudo = pseudo
         self.sensor_is_connected = False
         self.temperature = None
@@ -27,17 +30,17 @@ class DS18B20:
 
     def connect(self):
         if self.pseudo:
-            logger.info('Connected to sensor')
+            self.logger.info('Connected to pseudo sensor')
             return
         try:
             self.sensor = W1ThermSensor()
             if not self.sensor_is_connected:
                 self.sensor_is_connected = True
-                logger.info('Connected to sensor')
+                self.logger.info('Connected to sensor')
         except:
             if self.sensor_is_connected:
                 self.sensor_is_connected = False
-                logger.warning('Unable to connect to sensor')
+                self.logger.warning('Unable to connect to sensor')
 
     def poll(self):
         if self.pseudo:

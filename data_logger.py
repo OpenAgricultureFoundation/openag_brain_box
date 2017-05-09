@@ -6,7 +6,7 @@ import logging
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-handler = logging.FileHandler('main.log')
+handler = logging.FileHandler('/home/pi/openag_brain_box/ui/main.log')
 handler.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
@@ -26,7 +26,7 @@ class DataLogger:
     def logToCsv(self, variable, value, variance):
         value = float(value)
         date = str(datetime.date.today())
-        file_name = "data/{}/{}-{}.csv".format(variable, date, variable)
+        file_name = "/home/pi/openag_brain_box/ui/data/{}/{}-{}.csv".format(variable, date, variable)
 
         new_file = False
         if not os.path.exists(os.path.dirname(file_name)):
@@ -51,9 +51,9 @@ class DataLogger:
 
                 # Only log new values
                 if abs(value) > (previous_value) * (1 + variance) or  abs(value) < (previous_value) * (1 - variance):
-                    logger.info("Logging: {},{} to file: {}".format(time.time(), value, file_name))
+                    logger.debug("Logging: {},{} to file: {}".format(time.time(), value, file_name))
                     log_file.write("{},{}\n".format(time.time(), value))
-                else:
-                    logger.debug("Not logging to file: {}, Value = {}, Previous Value = {}".format(file_name, value, previous_value))
+                # else:
+                    # logger.debug("Not logging to file: {}, Value = {}, Previous Value = {}".format(file_name, value, previous_value))
 
             log_file.close()

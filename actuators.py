@@ -6,7 +6,7 @@ import logging
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-handler = logging.FileHandler('main.log')
+handler = logging.FileHandler('/home/pi/openag_brain_box/ui/main.log')
 handler.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
@@ -34,16 +34,19 @@ class Actuators:
         self.humidifier_is_on = False
 
         # Check for setpoints in setpoints.csv file
-        with open('setpoints.csv', mode='r') as setpoints_file:
+        with open('/home/pi/openag_brain_box/ui/setpoints.csv', mode='r') as setpoints_file:
             reader = csv.reader(setpoints_file)
             setpoints = {rows[0]:rows[1] for rows in reader}
             logger.debug(setpoints)
             try:
                 self.desired_air_temp = float(setpoints["air_temperature"])
                 self.desired_humidity = float(setpoints["humidity"])
-                logger.info("Set air air temp to {}, humidity to {}".format(self.desired_air_temp, self.desired_humidity))
+                logger.info("Set air temp to {}, humidity to {}".format(self.desired_air_temp, self.desired_humidity))
             except:
                 logger.warning("Unable to parse setpoints file, setpoints are set to default values")
+
+            self.shared.set("desired_air_temperature", "{0:.1f}".format(self.desired_air_temp))
+            self.shared.set("desired_humidity", "{0:.1f}".format(self.desired_humidity))
 
         # Initialize relays to be OFF
         for pin in self.relay_pins:
@@ -56,28 +59,30 @@ class Actuators:
         # Control air temperature
         if self.air_temp is not None:
             if not self.heater_is_on and self.air_temp < self.desired_air_temp - self.temperature_lower_band:
-                logger.info('Heater turning on')
+                logger.debug('Heater turning on')
                 self.heater_is_on = True
                 GPIO.output(self.relay_pins[2], GPIO.LOW) # turn on heater
             if self.heater_is_on and self.air_temp >= self.desired_air_temp - self.heater_overshoot:
-                logger.info('Heater turning off')
+                logger.debug('Heater turning off')
                 self.heater_is_on = False
                 GPIO.output(self.relay_pins[2], GPIO.HIGH) # turn off heater
         else:
             logger.warning('Unable to acquire air_temp from memcache')
+        self.shared.set("heater_is_on", "{}".format(self.heater_is_on))
 
         # Control humidity
         if self.humidity is not None:
             if not self.humidifier_is_on and self.humidity < self.desired_humidity - self.humidity_lower_band:
-                logger.info('Humidifier turning on')
+                logger.debug('Humidifier turning on')
                 self.humidifier_is_on = True
                 GPIO.output(self.relay_pins[3], GPIO.LOW) # turn on humidifier
             if self.humidifier_is_on and self.humidity >= self.desired_humidity - self.humidifier_overshoot:
-                logger.info('Humidifier turning off')
+                logger.debug('Humidifier turning off')
                 self.humidifier_is_on = False
                 GPIO.output(self.relay_pins[3], GPIO.HIGH) # turn off humidifier
         else:
             logger.warning('Unable to acquire humidity from memcache')
+        self.shared.set("humidifier_is_on", "{}".format(self.humidifier_is_on))
 
     def receiveSensorValuesFromMemcache(self):
         val = self.shared.get('ph')

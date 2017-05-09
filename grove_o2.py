@@ -4,8 +4,13 @@ This module consists of code for interacting with a Grove O2 sensor.
 
 import serial
 import logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = logging.FileHandler('/home/pi/openag_brain_box/ui/main.log')
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 class GroveO2:
     """
@@ -19,7 +24,6 @@ class GroveO2:
         self.pseudo = pseudo
         self.o2 = None
         self.sensor_is_connected = True
-
         self.connect()
 
     def connect(self):
@@ -28,9 +32,10 @@ class GroveO2:
             return
         try:
             self.serial = serial.Serial(self.serial_port, 19200, timeout=1)
+            logger.debug("self.serial.isOpen() = {}".format(self.serial.isOpen()))
             if not self.sensor_is_connected:
                 self.sensor_is_connected = True
-                logger.info('Connected to Grove O2 sensor')
+                logger.info('Connected to sensor')
         except:
             if self.sensor_is_connected:
                 self.sensor_is_connected = False
@@ -43,9 +48,10 @@ class GroveO2:
         if self.sensor_is_connected:
             try:
                 self.serial.write(('adc read {}\r'.format(self.analog_port)).encode())
-                response = port.read(25)
+                response = self.serial.read(25)
                 voltage = float(response[10:-3]) * 5 / 1024
                 o2 = voltage * 0.21 / 2.0 * 100 # percent
+                logger.debug('o2 = {}'.format(o2))
             except:
                 self.o2 = None
                 self.sensor_is_connected = False

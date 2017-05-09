@@ -1,0 +1,11 @@
+desired_air_temperature: 31.0
+desired_humidity: 81.0
+air_temperature: 27.3
+humidity: 72.9
+co2: 590
+o2: None
+water_temperature: None
+ph: 3.5
+ec: 0.0
+heater_is_on: True
+humidifier_is_on: True

@@ -1,0 +1,18 @@
+2017-05-09 21:15:16,056 - actuators - INFO - Set air temp to 25.0, humidity to 50.0
+2017-05-09 21:15:18,582 - mhz16 - INFO - Connected to sensor
+2017-05-09 21:15:18,584 - am2315 - INFO - Connected to sensor
+2017-05-09 21:15:20,597 - atlas_ph - INFO - Connected to sensor
+2017-05-09 21:15:21,890 - atlas_ec - INFO - Connected to sensor
+2017-05-09 21:15:21,892 - ds18b20 - DEBUG - Initializing sensor
+2017-05-09 21:15:33,337 - gui - INFO - Initialized pygame display
+2017-05-09 21:15:33,347 - gui - INFO - Initialized memcache client
+2017-05-09 21:15:46,919 - __main__ - INFO - Current variables: {'co2': '596', 'desired_humidity': '50.0', 'heater_is_on': 'False', 'ec': '0.0', 'humidity': '53.0', 'air_temperature': '26.9', 'humidifier_is_on': 'False', 'ph': '3.5', 'desired_air_temperature': '25.0', 'o2': None, 'water_temperature': None}
+2017-05-09 21:19:54,293 - actuators - INFO - Set air temp to 31.0, humidity to 81.0
+2017-05-09 21:19:56,448 - mhz16 - INFO - Connected to sensor
+2017-05-09 21:19:56,449 - am2315 - INFO - Connected to sensor
+2017-05-09 21:19:58,426 - atlas_ph - INFO - Connected to sensor
+2017-05-09 21:19:59,738 - atlas_ec - INFO - Connected to sensor
+2017-05-09 21:19:59,740 - ds18b20 - DEBUG - Initializing sensor
+2017-05-09 21:20:02,712 - gui - INFO - Initialized pygame display
+2017-05-09 21:20:02,722 - gui - INFO - Initialized memcache client
+2017-05-09 21:20:25,232 - __main__ - INFO - Current variables: {'co2': '584', 'desired_humidity': '81.0', 'heater_is_on': 'True', 'ec': '0.0', 'humidity': '49.8', 'air_temperature': '27.2', 'humidifier_is_on': 'True', 'ph': '3.5', 'desired_air_temperature': '31.0', 'o2': None, 'water_temperature': None}
