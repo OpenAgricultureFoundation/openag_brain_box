@@ -84,3 +84,4 @@ This will be a custom PCB based off the beaglebone with an optional solder-in mi
 
 ## Bonus Features
 - Power sensing of each system
+- Would be nice-to-have option to connect [BBB touchscreen cape](https://www.sparkfun.com/products/12086)
