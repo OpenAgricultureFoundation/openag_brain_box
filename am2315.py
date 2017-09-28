@@ -9,9 +9,12 @@ import time
 import quick2wire.i2c as qI2c
 import logging
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-handler = logging.FileHandler('/home/pi/openag_brain_box/ui/main.log')
-handler.setLevel(logging.INFO)
+#logger.setLevel(logging.INFO)
+#handler = logging.FileHandler('/home/pi/openag_brain_box/ui/main.log')
+#handler.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler('/tmp/main.log')
+handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
@@ -63,6 +66,8 @@ class AM2315:
         try:
             self.__i2c = qI2c
             self.__i2cMaster = qI2c.I2CMaster(1)
+            # debugrob, bus 2 by default on BBB/Ubuntu16
+            #self.__i2cMaster = qI2c.I2CMaster(2)
             self.sensor_is_connected = True
             logger.info('Connected to sensor')
         except:
@@ -147,12 +152,14 @@ class AM2315:
 
             try:
                 # Request data from the sensor, using a reference to the command bytes.
+                logger.debug('Request data from the sensor...')
                 self.__i2cMaster.transaction(self.__i2c.writing_bytes(self.__addr, self.cmdReadReg, *thCmd))
 
                 # Wait for the sensor to supply data to read.
                 time.sleep(0.1)
 
                 # Now read 8 bytes from the AM2315.
+                logger.debug('Read from sensor...')
                 rawTH = self.__i2cMaster.transaction(self.__i2c.reading(self.__addr, 8))
 
                 # Break the string we want out of the array the transaction returns.
